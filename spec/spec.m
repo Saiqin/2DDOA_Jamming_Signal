@@ -80,7 +80,7 @@ for j = 1:gg
     Ru=[Ru11,Ru21';Ru21,Ru22];
     [M_omega(j,:),M_gamma(j,:)] = D2MUSIC(Ru,fun_A,K);
     [R_omega(j,:),R_gamma(j,:)]=F2D_MUSIC(Ru,U,K);
-    [P_omega(j,:),P_gamma(j,:)]=IP_PM(Ru,U,K);
+    [P_omega(j,:),P_gamma(j,:)]=P_PM(Ru11,Ru22,Ru21,1/Snr,K);
     
     % savefig('Spec_CAB.fig');saveas(gca,['Spec_CAB.eps'],'epsc');
     
@@ -102,34 +102,39 @@ for j = 1:gg
 end
 figure;
 subplot(221);hold on;box on;
-plot(omega0,gamma0,'ks');
-plot(M_omega,M_gamma,'.','Color','#77AC30');%legend('True','MUSIC');
-h0 = plot(omega0(1),gamma0(1),'ks');
-h1 =plot(M_omega(1),M_gamma(1),'.','Color','#77AC30');%legend('True','MUSIC');
+h3 =plot(P_omega(1),P_gamma(1),'.','Color','#EDB120','Markersize',12);%legend('True','PM');
+plot(P_omega(1),P_gamma(1),'.','Color','#FFFFFF','Markersize',12);
+plot(omega0,gamma0,'ks')
+plot(P_omega,P_gamma,'.','Color','#EDB120');%legend('True','PM');
 xlabel('\omega','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
 ylabel('\gamma','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
 
 subplot(222);hold on;box on;
-plot(omega0,gamma0,'ks')
-plot(R_omega,R_gamma,'.','Color','#7E2F8E');%legend('True','RMUSIC');
-h2 =plot(R_omega(1),R_gamma(1),'.','Color','#7E2F8E');%legend('True','RMUSIC');
+h1 =plot(M_omega(1),M_gamma(1),'.','Color','#77AC30','Markersize',12);%legend('True','MUSIC');
+plot(M_omega(1),M_gamma(1),'.','Color','#FFFFFF','Markersize',12);
+plot(omega0,gamma0,'ks');
+plot(M_omega,M_gamma,'.','Color','#77AC30');%legend('True','MUSIC');
+h0 = plot(omega0(1),gamma0(1),'ks');
 xlabel('\omega','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
 ylabel('\gamma','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
 
 subplot(223);hold on;box on;
+h2 =plot(R_omega(1),R_gamma(1),'.','Color','#7E2F8E','Markersize',12);%legend('True','RMUSIC');
+plot(R_omega(1),R_gamma(1),'.','Color','#FFFFFF','Markersize',12);
 plot(omega0,gamma0,'ks')
-plot(P_omega,P_gamma,'.','Color','#EDB120');%legend('True','PM');
-h3 =plot(P_omega(1),P_gamma(1),'.','Color','#EDB120');%legend('True','PM');
-xlabel('\omega','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
-ylabel('\gamma','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
-subplot(224);hold on;box on;
-plot(omega0,gamma0,'ks');
-plot(L1_omega,L1_gamma,'.','Color','#0072BD');%legend('True','Proposed');
-h4 =plot(L1_omega(1),L1_gamma(1),'.','Color','#0072BD');%legend('True','Proposed');
+plot(R_omega,R_gamma,'.','Color','#7E2F8E');%legend('True','RMUSIC');
 xlabel('\omega','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
 ylabel('\gamma','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
 
-legend([h0,h1,h2,h3,h4],'True','MUSIC','RMUSIC','PM','Proposed','FontSize',12,'Fontname','Times New Roman','NumColumns',5)
+subplot(224);hold on;box on;
+h4 =plot(L1_omega(1),L1_gamma(1),'.','Color','#0072BD','Markersize',12);%legend('True','Proposed');
+plot(L1_omega(1),L1_gamma(1),'.','Color','#FFFFFF','Markersize',12);%legend('True','Proposed');
+plot(omega0,gamma0,'ks');
+plot(L1_omega,L1_gamma,'.','Color','#0072BD');%legend('True','Proposed');
+xlabel('\omega','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
+ylabel('\gamma','FontSize',14,'Fontname','Times New Roman','FontWeight','bold');
+
+legend([h0,h3,h1,h2,h4],'True','PM','MUSIC','RMUSIC','Proposed','FontSize',12,'Fontname','Times New Roman','NumColumns',5)
 savefig('Sample.fig');saveas(gca,['Sample.eps'],'epsc');
 % MUSIC = (D_M_o + D_M_g)/2;
 % RootMUSIC = (D_R_o + D_R_g)/2;

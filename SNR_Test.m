@@ -1,5 +1,5 @@
 clear;clc;close all;
-Nt = 500;
+Nt = 300;
 M1c=3;
 M2c=M1c+1;
 dx_0=sort([0:M1c:(M2c-1)*M1c,M2c:M2c:(2*M1c-1)*M2c])';
@@ -79,7 +79,7 @@ for i=1:ss
         Ru=[Ru11,Ru21';Ru21,Ru22];
         [M_omega,M_gamma] = D2MUSIC(Ru,fun_A,K);
         [R_omega,R_gamma]=F2D_MUSIC(Ru,U,K);
-        [P_omega,P_gamma]=IP_PM(Ru,U,K);
+        [P_omega,P_gamma]=P_PM(Ru11,Ru22,Ru21,1/Snr(i),K);
         % Our
         R11=y1*y1'/Nt;
         R21=y2*y1'/Nt;
@@ -111,13 +111,12 @@ RMSE_RootMUSIC=sqrt((sum(D_R_o,2)+sum(D_R_g,2))./(2*gg));
 RMSE_PM=sqrt((sum(D_P_o,2)+sum(D_P_g,2))./(2*gg));
 RMSE_Our1 = sqrt((sum(D_L1_o,2)+sum(D_L1_g,2))./(2*gg));
 h=figure();
-h0=semilogy(Snrdb,RMSE_MUSIC,'-d','Color','#77AC30','LineWidth',2);
-hold on;grid on;
-h1=semilogy(Snrdb,RMSE_RootMUSIC,'-s','LineWidth',2,'Color','#7E2F8E');
-h2=semilogy(Snrdb,RMSE_PM,'->','LineWidth',2,'Color','#EDB120');
+h0=semilogy(Snrdb,RMSE_PM,'->','LineWidth',2,'Color','#EDB120');hold on;grid on;
+h1=semilogy(Snrdb,RMSE_MUSIC,'-d','Color','#77AC30','LineWidth',2);
+h2=semilogy(Snrdb,RMSE_RootMUSIC,'-s','LineWidth',2,'Color','#7E2F8E');
 h3=semilogy(Snrdb,RMSE_Our1,'-o','LineWidth',2,'Color','#0072BD');
 h4=semilogy(Snrdb,sqrt((crlb_omega+crlb_gamma)/2),'--','Color','k','LineWidth',1.5,'MarkerSize',6);
-legend([h0,h1,h2,h3,h4],'2D-MUSIC','2D-RMUSIC','2D-PM','Proposed','CRB','NumColumns',1);
+legend([h0,h1,h2,h3,h4],'2D-PM','2D-MUSIC','2D-RMUSIC','Proposed','CRB','NumColumns',1);
 set(gca,'fontsize',16,'fontname','Times');
 set(h,'position',[100 200 600 450]);
 xlabel('SNR (dB)','FontWeight','bold');
